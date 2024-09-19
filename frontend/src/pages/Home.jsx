@@ -16,8 +16,9 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
+    const url = import.meta.env.VITE_API_BACKEND_URL;
     axios
-      .get("http://localhost:5555/books")
+      .get(`${url}/books`)
       .then((response) => {
         setBooks(response.data.data);
         setLoading(false);

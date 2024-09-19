@@ -16,8 +16,9 @@ const EditBook = () => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     setLoading(true);
+    const url = import.meta.env.VITE_API_BACKEND_URL;
     axios
-      .get(`http://localhost:5555/books/${id}`)
+      .get(`${url}/books/${id}`)
       .then((response) => {
         setAuthor(response.data.author);
         setPublishYear(response.data.publishYear);
@@ -37,8 +38,9 @@ const EditBook = () => {
       publishYear,
     };
     setLoading(true);
+    const url = import.meta.env.VITE_API_BACKEND_URL;
     axios
-      .put(`http://localhost:5555/books/${id}`, data)
+      .put(`${url}/books/${id}`, data)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Book Edited Successfully", { variant: "success" });

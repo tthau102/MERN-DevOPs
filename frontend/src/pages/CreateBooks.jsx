@@ -20,8 +20,9 @@ const CreateBooks = () => {
       publishYear,
     };
     setLoading(true);
+    const url = import.meta.env.VITE_API_BACKEND_URL;
     axios
-      .post("http://localhost:5555/books", data)
+      .post(`${url}/books`, data)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Book Created Successfully", { variant: "success" });

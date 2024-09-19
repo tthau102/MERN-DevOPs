@@ -13,8 +13,9 @@ const DeleteBook = () => {
   const { enqueueSnackbar } = useSnackbar();
   const handleDeleteBook = () => {
     setLoading(true);
+    const url = import.meta.env.VITE_API_BACKEND_URL;
     axios
-      .delete(`http://localhost:5555/books/${id}`)
+      .delete(`${url}/books/${id}`)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Book Deleted Successfully", { variant: "success" });

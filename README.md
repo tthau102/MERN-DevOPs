@@ -17,12 +17,12 @@ Video Tutorial: https://www.youtube.com/watch?v=-42K44A1oMA&t=4s
 
 ## Screenshots
 
-![Home](image.png)
-![Card View](image-1.png)
-![Create Book](image-2.png)
-![Show Book](image-3.png)
-![Edit Book](image-4.png)
-![Delete Book](image-5.png)
+![Home](assets/image.png)
+![Card View](assets/image-1.png)
+![Create Book](assets/image-2.png)
+![Show Book](assets/image-3.png)
+![Edit Book](assets/image-4.png)
+![Delete Book](assets/image-5.png)
 
 
 ## Getting Started
