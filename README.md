@@ -1,86 +1,63 @@
-# Book Store Project (MERN Stack)
+# Dockerizing a MERN Stack Application
 
-
-## Description
-
-This is a simple Book Store Project built using the MERN (MongoDB, Express.js, React, and Node.js) stack. This project demonstrates basic CRUD (Create, Read, Update, Delete) operations on both the backend and frontend, including routing and CORS policy configuration.
-
-Video Tutorial: https://www.youtube.com/watch?v=-42K44A1oMA&t=4s
-## Features
-
-- **Backend CRUD:** The backend of this project provides CRUD operations for managing books. You can create, read, update, and delete books using the API endpoints.
-- **Backend Router:** Express.js is used to set up the backend routing. Each CRUD operation has its own route and controller for clean code separation.
-- **CORS Policy:** Cross-Origin Resource Sharing (CORS) policy is configured to allow requests from the frontend to the backend, ensuring proper communication between the two.
-- **MongoDB Operations:** MongoDB is used as the database for storing book information. The backend performs database operations such as creating, reading, updating, and deleting records.
-- **Frontend CRUD:** The frontend of the project provides a user interface for performing CRUD operations on books. You can add new books, view existing books, edit book details, and delete books.
-- **Frontend Router:** React Router is used to create client-side routing, allowing seamless navigation between different pages of the frontend application.
-
-## Screenshots
-
-![Home](assets/image.png)
-![Card View](assets/image-1.png)
-![Create Book](assets/image-2.png)
-![Show Book](assets/image-3.png)
-![Edit Book](assets/image-4.png)
-![Delete Book](assets/image-5.png)
-
+The setup includes building and running Docker containers for both the frontend and backend, along with MongoDB, and managing them using Docker Compose.
 
 ## Getting Started
 
-Follow the steps below to set up the project on your local machine and run it:
+### Create a Network for Docker Containers
 
-1. Clone the repository:
+Create a Docker network to allow containers to communicate with each other:
 
-```bash
-git clone https://github.com/JosephDoUrden/Book-Store-Project
-cd book-store-project
+```sh
+docker network create docker-network
 ```
 
-2. Backend Setup:
+### Build and Run the Client
 
-```bash
-cd backend
-npm install
+1. **Build the Client Docker Image**
+
+   ```sh
+   cd ./frontend
+   docker build -t frontend .
+   ```
+
+2. **Run the Client Container**
+
+   ```sh
+   docker run --name=frontend --network=docker-network -d -p 5173:5173 frontend
+   ```
+
+3. **Verify the Client is Running**
+
+   Open your browser and go to `http://localhost:5173` to see the frontend application in action.
+
+### Run the MongoDB Container
+
+```sh
+docker run --network=docker-network --name mongodb -d -p 27017:27017 -v ~/opt/data:/data/mydb mongo:latest
 ```
 
-- Configure the MongoDB connection by creating a .env file with your MongoDB URI:
+### Build and Run the Server
+
+1. **Build the Server Docker Image**
+
+   ```sh
+   cd ./backend
+   docker build -t backend .
+   ```
+
+2. **Run the Server Container**
+
+   ```sh
+   docker run --name=backend --network=docker-network -d -p 8000:8000 backend
+   ```
+
+## Using Docker Compose
+
+To simplify container management, you can use Docker Compose to build and run all services:
+
+```sh
+docker-compose up -d
 ```
-MONGODB_URI=mongodb://localhost:27017/bookstore
-```
 
-- Start the backend server:
-```
-npm run dev
-```
-
-3. Frontend Setup(new terminal):
-```
-cd frontend
-npm install
-npm run dev
-```
-
-## Technologies Used
-### Backend:
-- Node.js
-- Express.js
-- MongoDB
-
-### Frontend:
-
-- Vite
-- React
-
-
-
-## Contact
-
-If you have any questions, feedback, or would like to connect, feel free to reach out to me.
-
-- **Name:** Yusufhan Saçak
-- **Email:** yusufhan.sacak@bahcesehir.edu.tr
-- **Website:** https://medium.com/@yusufhansacak
-- **Twitter:** [@0xSCK](https://twitter.com/0xSCK)
-- **LinkedIn:** [Yusufhan Saçak](https://www.linkedin.com/in/yusufhansacak/)
-
-Feel free to contact me through any of the channels above. I'm open to collaborations and discussions related to Flutter development or any other projects.
+This command will build and start the frontend, backend, and MongoDB containers as defined in your `docker-compose.yml` file.
