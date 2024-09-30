@@ -24,7 +24,7 @@ pipeline {
         stage('Git: Code Checkout') {
             steps {
                 script{
-                    code_checkout("https://github.com/atkaridarshan04/MERN-DevOps.git","devops")
+                    code_checkout("https://github.com/atkaridarshan04/MERN-DevOps.git","main")
                 }
             }
         }
