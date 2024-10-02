@@ -1,81 +1,75 @@
-# Jenkins CI/CD Pipeline for MERN Stack Application
+# Kubernetes Deployment of the MERN Stack
 
-This guide explains the Jenkins pipeline used to automate the Continuous Integration (CI) and Continuous Deployment (CD) processes for the MERN stack application.
+### Prerequisites
 
----
+Before deploying the MERN stack to Kubernetes, ensure the following:
 
-## Overview
+- A running Kubernetes cluster (set up via `kubeadm`, Minikube, GKE, EKS, etc.)
+- `kubectl` installed and configured
+- Docker images available either on Docker Hub or locally
 
-The Jenkins pipeline is divided into two major components:
+### Step 1: Create a Namespace
 
-1. **Continuous Integration (CI) Pipeline**:
-   - Handles code checkout from GitHub.
-   - Runs security and code quality scans (Trivy, OWASP Dependency Check, SonarQube).
-   - Builds Docker images for the frontend and backend applications.
-   - Pushes the built Docker images to Docker Hub.
+Organize Kubernetes resources by creating a namespace for your MERN application:
 
-2. **Continuous Deployment (CD) Pipeline**:
-   - Updates Kubernetes manifest files with the new Docker image tags.
-   - Pushes the updated configurations back to GitHub.
-   - Notifies the team via email about the build and deployment status.
+```bash
+kubectl create ns mern-devops
+```
 
----
+Switch to the directory containing your Kubernetes YAML configurations:
 
-## Key Stages in the CI Pipeline
+```bash
+cd kubernetes/
+```
 
-### 1. **Workspace Cleanup**
-   - Ensures that the workspace is clean before starting the build process.
+### Step 2: Deploy Persistent Storage
 
-### 2. **Code Checkout**
-   - Retrieves the latest code from the GitHub repository.
+Create persistent storage for MongoDB using PersistentVolume (PV) and PersistentVolumeClaim (PVC):
 
-### 3. **Security and Quality Scanning**
-   - **Trivy**: Scans the project files for vulnerabilities.
-   - **OWASP Dependency Check**: Analyzes project dependencies for known security issues.
-   - **SonarQube**: Performs static code analysis to detect bugs, code smells, and vulnerabilities.
+```bash
+kubectl apply -f persistentVolume.yml
+kubectl apply -f persistentVolumeClaim.yml
+```
 
-### 4. **Docker Image Build**
-   - Builds Docker images for both the frontend and backend of the MERN application.
-   - The built images are tagged with a version, making them easy to identify and manage.
+### Step 3: Deploy MongoDB with Service
 
-### 5. **Push Docker Images to Docker Hub**
-   - Tags the images using parameters (`FRONTEND_DOCKER_TAG` and `BACKEND_DOCKER_TAG`).
-   - Pushes the tagged images to Docker Hub for future deployments.
+Deploy MongoDB and expose it through a service:
 
----
+```bash
+kubectl apply -f mongodb.yml
+```
 
-## Key Stages in the CD Pipeline
+### Step 4: Deploy the Backend (Node.js) with Service
 
-### 1. **Verify Docker Image Tags**
-   - Confirms that the correct Docker image tags for the frontend and backend have been provided.
+Deploy the backend service:
 
-### 2. **Update Kubernetes Manifests**
-   - Updates the Kubernetes YAML files with the new Docker image tags for both the backend and frontend services.
+```bash
+kubectl apply -f backend.yml
+```
 
-### 3. **Git Push**
-   - Commits the updated Kubernetes manifest files to the GitHub repository.
+### Step 5: Deploy the Frontend (React) with Service
 
-### 4. **Email Notification**
-   - Sends a formatted email with the build and deployment status to the team, including links to the Jenkins build.
+Deploy the frontend service:
+
+```bash
+kubectl apply -f frontend.yml
+```
 
 ---
 
-## Key Tools and Integrations
+## Accessing the Application
 
-- **GitHub**: Version control system used to store and track the source code.
-- **SonarQube**: Used for static code analysis.
-- **Trivy**: A vulnerability scanner that analyzes files and containers.
-- **OWASP Dependency Check**: Checks for vulnerabilities in third-party dependencies.
-- **Docker**: Containerization technology used to build and deploy the MERN stack application.
-- **Docker Hub**: A repository for hosting and managing Docker images.
-- **Kubernetes**: Orchestrates the deployment of containers across a cluster.
+Your services are exposed using **NodePort**, allowing external access to both the frontend and backend.
 
----
+1. **Retrieve the NodePort** for frontend and backend:
+   ```bash
+   kubectl get services -n mern-devops
+   ```
 
-## Usage
-
-1. **CI Pipeline**: Triggers automatically when code is pushed to the repository, running tests, security scans, building Docker images, and pushing them to Docker Hub.
-   
-2. **CD Pipeline**: Triggers after successful CI execution. It updates the Kubernetes manifests with the new Docker image tags, pushes the changes to GitHub, and applies the new configurations to the Kubernetes cluster.
+2. **Access the Frontend**:
+   Open your browser and navigate to:
+   ```bash
+   http://<ec2-workerNode-ip>:<frontend-nodeport>
+   ```
 
 ---
