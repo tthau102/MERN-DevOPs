@@ -45,7 +45,7 @@ pipeline {
                     
                     dir('kubernetes'){
                         sh """
-                            sed -i -e s/bookstore-frontend*/bookstore-frontend:${params.FRONTEND_DOCKER_TAG}/g frontend.yml
+                            sed -i -e s/bookstore-frontend.*/bookstore-frontend:${params.FRONTEND_DOCKER_TAG}/g frontend.yml
                         """
                     }
                     
