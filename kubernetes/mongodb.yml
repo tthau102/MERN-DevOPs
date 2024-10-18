@@ -34,7 +34,7 @@ spec:
               cpu: "1"
           volumeMounts:
             - name: mongodb-vol
-              mountPath: /data/mydb        
+              mountPath: /data/db        
       volumes:
         - name: mongodb-vol
           persistentVolumeClaim:

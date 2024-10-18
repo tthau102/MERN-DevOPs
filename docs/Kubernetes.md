@@ -44,6 +44,7 @@ kubectl apply -f mongodb.yml
 Deploy the backend service:
 
 ```bash
+kubectl apply -f backend-config.yml
 kubectl apply -f backend.yml
 ```
 

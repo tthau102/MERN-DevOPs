@@ -21,6 +21,17 @@ spec:
           image: atkaridarshan04/bookstore-backend:v1
           ports:
             - containerPort: 8000
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: PORT
+            - name: mongoDBURL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: mongoDBURL  
           resources:
             requests:
               memory: "256Mi"
