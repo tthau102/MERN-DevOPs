@@ -52,6 +52,7 @@ kubectl apply -f backend.yml
 Deploy the frontend service:
 
 ```bash
+kubectl apply -f frontend-config.yml
 kubectl apply -f frontend.yml
 ```
 

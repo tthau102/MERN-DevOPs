@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: mongodb-dep
+  name: mongodb
   namespace: mern-devops
   labels:
     app: mongodb
@@ -10,6 +10,10 @@ spec:
   selector:
     matchLabels:
       app: mongodb
+  updateStrategy:
+    type: RollingUpdate   
+    rollingUpdate:
+      partition: 0
   template:
     metadata:
       name: mongodb
@@ -21,9 +25,16 @@ spec:
           image: mongo:latest
           ports:
             - containerPort: 27017
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
           volumeMounts:
             - name: mongodb-vol
-              mountPath: /data/mydb
+              mountPath: /data/mydb        
       volumes:
         - name: mongodb-vol
           persistentVolumeClaim:
