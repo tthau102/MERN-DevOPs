@@ -10,6 +10,9 @@ The MERN DevOps project includes:
 - **Kubernetes Deployment**: Deploying the application on a Kubernetes cluster using `kubectl` and YAML configurations.
 - **CI/CD Pipeline**: Automating the build, test, and deployment processes using Jenkins.
 
+## Project Deployment Flow
+![workflow-gif](./docs/workflow.gif)
+
 ## Documentation
 
 To understand the various components of this project, refer to the following documentation:
