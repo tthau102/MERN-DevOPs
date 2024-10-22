@@ -27,7 +27,7 @@ git clone https://github.com/atkaridarshan04/MERN-DevOps.git
 Change into the Helm charts directory:
 
 ```bash
-cd /helm
+cd MERN-DevOps/helm
 ```
 
 ---
@@ -53,28 +53,42 @@ env:
 
 ---
 
-## Step 4: Install the Helm Charts
+## Step 4: Package the Helm Charts
+
+Package all the charts into `.tgz` files. Run the following command from the helm directory:
+
+```bash
+helm package backend-chart
+helm package frontend-chart
+helm package mongodb-chart
+```
+
+This will create `.tgz` files for each chart in the current directory.
+
+---
+
+## Step 5: Install the Helm Charts
 
 Install each chart using Helm.
 
 ### Install MongoDB Chart
 ```bash
-helm install mongodb-chart ./mongodb-chart/
+helm install mongodb-chart ./mongodb-chart
 ```
 
 ### Install Backend Chart
 ```bash
-helm install backend-chart ./backend-chart/
+helm install backend-chart ./backend-chart
 ```
 
 ### Install Frontend Chart
 ```bash
-helm install frontend-chart ./frontend-chart/
+helm install frontend-chart ./frontend-chart
 ```
 
 ---
 
-## Step 5: Verify the Installation
+## Step 6: Verify the Installation
 
 List all Helm releases to confirm they are deployed:
 
@@ -85,26 +99,26 @@ helm ls
 Check the status of all resources in the Kubernetes cluster:
 
 ```bash
-kubectl get all
+kubectl get all -n mern-devops
 ```
 
 You should see the running pods, services, and deployments associated with your MongoDB, backend, and frontend charts.
 
 ---
 
-## Step 6: Access the Application
+## Step 7: Access the Application
 
 Make sure the frontend service is exposed via **NodePort**. Use the following address to access the application:
 
 ```
-http://<ec2-workerNode-ip>:31100
+http://<ec2-workerNode-ip>:31000
 ```
 
 Replace `<ec2-workerNode-ip>` with the public IP address of your EC2 worker node.
 
 ---
 
-## Step 7: Cleanup
+## Step 8: Cleanup
 
 If you need to uninstall the deployed Helm charts, use the following commands:
 
@@ -134,4 +148,5 @@ List all Helm releases to confirm they are uninstalled:
 ```bash
 helm ls
 ```
+
 ---

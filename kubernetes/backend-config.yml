@@ -5,4 +5,4 @@ metadata:
   namespace: mern-devops
 data:
   PORT: "8000"
-  mongoDBURL: "mongodb://mongodb:27017/db"
+  mongoDBURL: "mongodb://admin:password123@mongodb-service:27017/db?authSource=admin"

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-dep
+  name: backend-deployment
   namespace: mern-devops
   labels:
     app: backend
@@ -67,7 +67,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: backend-service
   namespace: mern-devops
 spec:
   type: NodePort
