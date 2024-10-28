@@ -10,8 +10,21 @@ services:
       - ./frontend/.env.docker
     networks:
       - docker-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: on-failure
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
   backend:
     container_name: backend
@@ -22,18 +35,43 @@ services:
       - ./backend/.env.docker
     networks:
       - docker-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/books"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: on-failure
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
 
   mongodb:
     container_name: mongodb
-    image: mongo:latest
+    image: mongo:4.4
     ports:
       - "27017:27017"
     networks:
       - docker-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: on-failure
     volumes:
-      - mongodb-vol:/data/mydb
+      - mongodb-vol:/data/db
 
 networks:
   docker-network:
