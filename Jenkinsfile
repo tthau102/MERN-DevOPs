@@ -1,9 +1,8 @@
-@Library('Shared-Library') _
 pipeline {
-    agent {label 'worker-node'}
+    agent {label 'worker'}
     
     environment{
-        SONAR_HOME = tool "Sonar"
+        SONAR_HOME = tool "sonar"
     }
     
     parameters {
@@ -12,85 +11,94 @@ pipeline {
     }
     
     stages {
-        
-        stage("Workspace cleanup"){
-            steps{
-                script{
+        stage('Workspace cleanup') {
+            steps {
+                script {
                     cleanWs()
                 }
             }
         }
         
-        stage('Git: Code Checkout') {
+        stage('Code Checkout') {
             steps {
-                script{
-                    code_checkout("https://github.com/atkaridarshan04/MERN-DevOps.git","main")
-                }
+                git url: "https://github.com/atkaridarshan04/MERN-DevOps.git", branch: "main"
             }
         }
         
-        stage("Trivy: Filesystem scan"){
-            steps{
-                script{
-                    trivy_scan()
-                }
+        stage('trivy file scan') {
+            steps {
+                sh "trivy fs --format table -o fs.html ."
+                
             }
         }
 
         stage("OWASP: Dependency check"){
             steps{
                 script{
-                    owasp_dependency()
+                    dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'OWASP'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
             }
         }
         
-        stage("SonarQube: Code Analysis"){
-            steps{
-                script{
-                    sonarqube_analysis("Sonar","book-store","book-store")
+        stage('SonarQube: Code Analysis') {
+            steps {
+                withSonarQubeEnv("sonar"){
+                sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=bookstore -Dsonar.projectKey=bookstore -X"
                 }
             }
         }
         
         stage("SonarQube: Code Quality Gates"){
-            steps{
-                script{
-                    sonarqube_code_quality()
+            steps {
+                timeout(time: 5, unit: "MINUTES"){
+                waitForQualityGate abortPipeline: false
                 }
             }
         }
         
-        stage("Docker: Build Images"){
-            steps{
-                script{
-                        dir('backend'){
-                            docker_build("atkaridarshan04", "bookstore-backend", "${params.BACKEND_DOCKER_TAG}")
-                        }
-                    
-                        dir('frontend'){
-                            docker_build("atkaridarshan04", "bookstore-frontend", "${params.FRONTEND_DOCKER_TAG}")
-                        }
+        stage("Docker: Build Images") {
+            steps {
+                script {
+                    sh '''
+                    cd frontend
+                    docker build -t atkaridarshan04/bookstore-frontend:${FRONTEND_DOCKER_TAG} .
+                    '''
                 }
+                script {
+                    sh '''
+                    cd backend
+                    docker build -t atkaridarshan04/bookstore-backend:${BACKEND_DOCKER_TAG} .
+                    '''
+                }   
             }
         }
         
-        stage("Docker: Push to DockerHub"){
-            steps{
-                script{
-                    docker_push("atkaridarshan04", "bookstore-backend", "${params.BACKEND_DOCKER_TAG}")
-                    docker_push("atkaridarshan04", "bookstore-frontend", "${params.FRONTEND_DOCKER_TAG}")
+        stage("Docker: Push images to DockerHub") {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-token', passwordVariable: 'dockerhubpass', usernameVariable: 'dockerhubuser')]) {
+                    sh "docker login -u ${dockerhubuser} -p ${dockerhubpass}"
+                    }
+                    sh "docker push atkaridarshan04/bookstore-frontend:${FRONTEND_DOCKER_TAG}"
+                }
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-token', passwordVariable: 'dockerhubpass', usernameVariable: 'dockerhubuser')]) {
+                    sh "docker login -u ${dockerhubuser} -p ${dockerhubpass}"
+                    }
+                    sh "docker push atkaridarshan04/bookstore-backend:${BACKEND_DOCKER_TAG}"
                 }
             }
         }
     }
+
     post{
-        success{
-            archiveArtifacts artifacts: '*.xml', followSymlinks: false
-            build job: "BookStore-CD", parameters: [
-                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
+    success{
+        archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true, followSymlinks: false
+        build job: "bookstore-cd", parameters: [
+            string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
+            string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
             ]
-        }
+        }   
     }
 }
