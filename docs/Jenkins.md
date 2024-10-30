@@ -55,6 +55,8 @@ The Jenkins pipeline is divided into two major components:
      - SonarQube Scanner
      - Docker Pipeline
      - Pipeline Stage View
+   
+   ![install_plugins](../assets/install_plugins.png)
 
 ---
 
@@ -65,9 +67,13 @@ The Jenkins pipeline is divided into two major components:
    - In the **Available Plugins** tab, search for **OWASP Dependency-Check** and install it.
 
 2. **Configure OWASP Dependency-Check:**
-   - Go to **Manage Jenkins > Global Tool Configuration**.
-   - Scroll to **OWASP Dependency-Check Installation** and set the version (or install if required).
-   - Name it `OWASP`
+   - Go to **Manage Jenkins > Tool**.
+   - Scroll to **Add Dependency-Check** 
+      - Name it `OWASP`
+      - Click on **Install Automatically**
+         - Click on **Add installer** -> **Install from github.com**
+
+   ![owasp](../assets/owasp.png)
 
 ---
 
@@ -85,6 +91,10 @@ The Jenkins pipeline is divided into two major components:
      - **Navigate to:** `Administration > Security > Users > Tokens`.
      - **Create a token** and give it a name, e.g., `jenkins-token`.
 
+   ![sonarqube-token-1](../assets/sonarqube-token-1.png)
+   ![sonarqube-token-2](../assets/sonarqube-token-2.png)
+   ![sonarqube-token-3](../assets/sonarqube-token-3.png)
+
 3. **Integrate SonarQube with Jenkins:**
    - In Jenkins, go to **Manage Jenkins > Configure System**.
    - Scroll to **SonarQube Servers** and add a new server with the following details:
@@ -93,29 +103,39 @@ The Jenkins pipeline is divided into two major components:
      - **Authentication Token:** Click **Add** to add the token.
        - Set **Kind** to **Secret text**.
        - Paste the **SonarQube token** generated earlier.
-       - Give it a unique **ID** like `sonar-token`.
+       - Give it a unique **ID** like `sonar-token`.       
+       
+   ![sonarqube-credentials](../assets/sonarqube-credentials.png)
+   ![sonarqube-system](../assets/sonarqube-system.png)
+
    - Click **Save** to apply the changes.
 
 4. **Add SonarQube Scanner to Jenkins:**
-   - Go to **Manage Jenkins > Global Tool Configuration**.
-   - Scroll to **SonarQube Scanner** and install the latest version of the SonarQube Scanner.
+   - Go to **Manage Jenkins > Tool**.
+   - Scroll to **SonarQube Scanner installations** and install the latest version of the SonarQube Scanner.
    - Name it `sonar`.
 
+   ![sonar-scanner](../assets/sonar-scanner.png)
 ---
 
 ## 4. **Configure SonarQube Webhook** 
 
 1. **Set Up Webhook in SonarQube:**
-   - Go to **SonarQube > Administration > Webhooks**.
+   - Go to **SonarQube > Administration > Configuration > Webhooks**.
+
+   ![sonarqube-webhook-1](../assets/sonarqube-webhook-1.png)
+
    - Add a new webhook with the following details:
      - **URL:** `http://<your-jenkins-url>/sonarqube-webhook/`
    - This allows SonarQube to send analysis results back to Jenkins.
+
+   ![sonarqube-webhook-2](../assets/sonarqube-webhook-2.png)
 
 ---
 
 ## 5. **Install Trivy for Security Scanning** <b id="trivy"></b>
 
-**Install Trivy:**
+**Install Trivy:** Run the following commands in terminal where Jenkins is installed.
    ```bash
    sudo apt-get install wget apt-transport-https gnupg lsb-release -y
    wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
@@ -128,20 +148,33 @@ The Jenkins pipeline is divided into two major components:
 
 ## 6. **Email Notification Setup in Jenkins** <b id="email-notifications"></b>
 
-1. **Setup Email Notifications:**
+1. **Create Gmail App Password:**
+   - Go to your Google Account and generate an **App Password** under **Security** > **App Passwords** (requires two-factor authentication).
+
+   ![gmail-1](../assets/gmail-1.png)
+   ![gmail-2](../assets/gmail-2.png)
+   ![gmail-3](../assets/gmail-3.png)
+
+2. **Setup Up Credentials in Jenkins:**  
+   Paste the `Secret` at the password.
+   ![gmail-cred](../assets/gmail-cred.png)
+
+
+3. **Setup Email Notifications:**
    - Go to **Manage Jenkins > Configure System**.
    - Scroll to **Extended E-mail Notification** and configure:
      - **SMTP server:** `smtp.gmail.com`
      - **SMTP port:** `465`
      - **Use SSL:** `Yes`
+
+      ![gmail-system-1](../assets/gmail-system-1.png)
+
+   - Scroll to **E-mail Notification** and configure
      - **SMTP authentication username:** Your Gmail address
      - **SMTP authentication password:** App-specific password (generated via Gmail with two-factor authentication).
 
-2. **Create Gmail App Password:**
-   - Go to your Google Account and generate an **App Password** under **Security** > **App Passwords** (requires two-factor authentication).
-
-3. **Test Email Notifications:**
-   - Go to **Jenkins > Manage Jenkins > Test configuration** to ensure email notifications are sent.
+      ![gmail-system-2](../assets/gmail-system-2.png)
+      ![gmail-system-3](../assets/gmail-system-3.png)
 
 ---
 
@@ -152,35 +185,39 @@ The Jenkins pipeline is divided into two major components:
 1. **Generate a GitHub Personal Access Token:**
    - Go to **GitHub** > **Settings** > **Developer settings** > **Personal access tokens**.
    - Generate a new token with necessary permissions (e.g., `repo`, `admin:repo_hook` for repository access).
+   ![github-cred](../assets/github-cred.png)
 
 2. **Add GitHub Credentials in Jenkins:**
    - In Jenkins, go to **Manage Jenkins > Manage Credentials**.
    - Under the appropriate domain (usually the **Global** domain):
      - Click **Add Credentials**.
-     - Select **Kind:** `Secret text`.
+     - Select **Kind:** `Username and Password`.
+     - In the **Username** field, paste your **GitHub Username**.
      - In the **Secret** field, paste your **GitHub personal access token**.
      - **ID:** Give it a descriptive ID, such as `github-token`.
      - **Description:** Something like "GitHub Token for Jenkins".
+
+     ![github-cred](../assets/github-token.png)
 
 ---
 
 ### **Add Docker Hub Credentials**
 
-1. **Generate Docker Hub Credentials:**
-   - Make sure you have a Docker Hub account and credentials (username and password).
+1. **Generate a Docker Hub Personal Access Token:**
+   - Go to **Docker Hub** > **Account Settings** > **Personal Access Token** 
 
-2. **Add Docker Hub Credentials in Jenkins:**
-   - In Jenkins, go to **Manage Jenkins > Manage Credentials**.
-   - Under the appropriate domain (usually the **Global** domain):
-     - Click **Add Credentials**.
-     - Select **Kind:** `Username with password`.
-     - **Username:** Your Docker Hub username.
-     - **Password:** Your Docker Hub password or access token.
-     - **ID:** Give it a descriptive ID, such as `docker-hub-token`.
-     - **Description:** Something like "Docker Hub Credentials for Jenkins".
+      ![docker-token-1](../assets/docker-token-1.png)
+      ![docker-token-2](../assets/docker-token-2.png)
+
+2. **Add Docker Hub Credentials in Jenkins:**  
+   - Follow same as done for GitHub Credentials  
 
 ---
 
+## 8. All Credentials
+   ![all-credentials](../assets/all-credentials.png)
+
+---
 
 ## Key Stages in the CI Pipeline
 
