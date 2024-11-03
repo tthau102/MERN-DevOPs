@@ -92,7 +92,10 @@ After logging in, go to **User Info** and change the default password for enhanc
 2. Fill in the following details:
    - **Application Name:** `mern-devops`  
    - **Project:** `default`  
-   - **Sync Policy:** Choose **Manual** or **Automatic** based on your need.
+   - **Sync Policy:** Choose `Manual` or `Automatic` based on your need.
+   - Select `Auto-Create Namespace`
+
+   ![argocd-1](../assets/argocd-1.png)
 
 ---
 
@@ -106,29 +109,23 @@ After logging in, go to **User Info** and change the default password for enhanc
 - **Path to Manifests:**  
   `/kubernetes` 
 
+  ![argocd-2](../assets/argocd-2.png)
+
 ---
 
 ### **3 Set Deployment Cluster and Namespace**
 - **Cluster:** Select the default cluster if you are deploying to the same cluster.  
-- **Namespace:** Specify a target namespace for your app:
-   ```bash
-   kubectl create namespace mern-devops
-   ```
+- **Namespace:** Specify a target namespace for your app: `mern-devops`
+
+   ![argocd-3](../assets/argocd-3.png)
 
 ---
 
 ### **4 Save and Sync the Application**
 1. Click **Create** to save the configuration.
-2. Open the new application in the ArgoCD dashboard.
-3. Click **Sync** to deploy the app.
+2. Open the application in the ArgoCD dashboard.
 
----
-
-### **5 Verify Application Deployment**
-Check the status of the deployed pods:
-```bash
-kubectl get pods -n mern-devops
-```
-Make sure all the pods are in the **Running** state.
+   ![argocd-4](../assets/argocd-4.png)
+   ![argocd-5](../assets/argocd-5.png)
 
 ---
