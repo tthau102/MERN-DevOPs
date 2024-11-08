@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: atkaridarshan04/bookstore-backend:v1
+          image: atkaridarshan04/bookstore-backend:v2
           ports:
             - containerPort: 8000
           env:
