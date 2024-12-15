@@ -4,6 +4,31 @@ This guide provides step-by-step instructions to **install and configure ArgoCD*
 
 ---
 
+## Cluster Configuration: `kind-config.yaml`
+
+```yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 80 # for nginx ingress
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+  - containerPort: 31000 # for frontend container 
+    hostPort: 31000
+    protocol: TCP
+  - containerPort: 31100 # for backend container
+    hostPort: 31100
+    protocol: TCP
+  - containerPort: 30001 # for argocd
+    hostPort: 30001
+    protocol: TCP
+```
+
 ## **1. Install and Configure ArgoCD**
 
 ### **1 Create the ArgoCD Namespace**
@@ -49,6 +74,13 @@ kubectl get svc -n argocd
 ```bash
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 ```
+
+Configure the nodePort `30001`
+```bash
+kubectl patch edit argocd-server -n argocd 
+```
+
+![argocd](../assets/argocd.png)
 
 ### **8 Confirm Service Type Change**
 ```bash

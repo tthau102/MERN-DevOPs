@@ -108,14 +108,14 @@ kubectl apply -f frontend.yml
 kubectl get all -n mern-devops
 ```  
 
-![k8s-4.png](../assets/k8s-4.png)
+![K8s-4.png](../assets/K8s-4.png)
 
 - **Frontend:** Access the application at:
   
   ```
   http://<node-ip>:31000
   ```
-  ![k8s-3.png](../assets/k8s-3.png)
+  ![K8s-3.png](../assets/K8s-3.png)
 
 - **Backend API Test:**
 
