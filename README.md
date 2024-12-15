@@ -13,7 +13,7 @@ The MERN DevOps project includes:
 - **CI/CD Pipeline**: Automating the build, test, and deployment processes using Jenkins.
 - **Helm Deployment**: Managing Kubernetes deployments using Helm charts for MongoDB, backend, and frontend services.
 - **ArgoCD GitOps**: Continuously deploying and synchronizing the application with the GitHub repository to ensure that the live environment reflects the latest code changes.
-
+- **Observability**: Implementing monitoring mechanisms using tools like Prometheus and Grafana to monitor the health and performance of the application.
 ---
 
 ## **Project Deployment Flow**
@@ -40,5 +40,8 @@ To understand the various components of this project, refer to the following doc
 
 - **[ArgoCD.md](./docs/ArgoCD.md)**:  
   A step-by-step guide on installing, configuring, and using ArgoCD to deploy the application by Connecting ArgoCD to the GitHub repository.
+
+- **[Observability.md](./docs/Observability.md)**:   
+Instructions on setting up Prometheus for monitoring application metrics. Visualizing data with Grafana dashboards.
 
 ---
