@@ -80,14 +80,14 @@ By default, services are set to `ClusterIP`. To make them accessible externally,
   kubectl edit svc prometheus-kube-prometheus-prometheus -n prometheus
   ```  
   Update `type: ClusterIP` to `type: NodePort` and save the file.  
-  ![prometheus.md](../assets/prometheus.png)
+  ![prometheus.md](./assets/prometheus.png)
 
 - **Edit Grafana Service**:  
   ```bash
   kubectl edit svc prometheus-grafana -n prometheus
   ```  
   Similarly, update `type: ClusterIP` to `type: NodePort`. 
-  ![graphana.md](../assets/graphana.png)
+  ![graphana.md](./assets/graphana.png)
 
 ### 7. **Verify Exposed Services**  
 Check the services to get the assigned NodePorts:  
@@ -122,7 +122,7 @@ echo
    - Configure alerts in Prometheus for key metrics like CPU usage, memory consumption, or pod availability.  
    - Use Grafana to set up alerting rules and visualize trends.  
 ---
-![graphana-1](../assets/graphana-1.png)
-![graphana21](../assets/graphana-2.png)
-![graphana31](../assets/graphana-3.png)
+![graphana-1](./assets/graphana-1.png)
+![graphana21](./assets/graphana-2.png)
+![graphana31](./assets/graphana-3.png)
 ---

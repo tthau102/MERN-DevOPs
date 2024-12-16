@@ -18,7 +18,7 @@ The MERN DevOps project includes:
 
 ## **Project Deployment Flow**
 
-![workflow-gif](./assets/workflow.gif)
+![workflow-gif](./docs/assets/workflow.gif)
 
 ---
 

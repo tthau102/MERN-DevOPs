@@ -108,14 +108,14 @@ kubectl apply -f frontend.yml
 kubectl get all -n mern-devops
 ```  
 
-![K8s-4.png](../assets/K8s-4.png)
+![K8s-4.png](./assets/K8s-4.png)
 
 - **Frontend:** Access the application at:
   
   ```
   http://<node-ip>:31000
   ```
-  ![K8s-3.png](../assets/K8s-3.png)
+  ![K8s-3.png](./assets/K8s-3.png)
 
 - **Backend API Test:**
 
@@ -177,7 +177,7 @@ Integrate DuckDNS for domain-based access:
 3. **Update configuration:** Associate your DuckDNS domain with the IP address of your Kubernetes node.
 4. **Verify DNS:** Ensure the application is accessible through your domain.
 
-![duckdns.png](../assets/duckdns.png)
+![duckdns.png](./assets/duckdns.png)
 ---
 
 ## 9. Access the Application
@@ -190,14 +190,14 @@ Integrate DuckDNS for domain-based access:
   ```
   http://yourdomain.duckdns.org
   ```
-  ![k8s-1.png](../assets/k8s-1.png)
+  ![k8s-1.png](./assets/k8s-1.png)
 
 - **Backend API Test:** Access the backend:
 
   ```
   http://yourdomain.duckdns.org/books
   ```
-  ![k8s-2.png](../assets/k8s-2.png)
+  ![k8s-2.png](./assets/k8s-2.png)
 
 ---
 

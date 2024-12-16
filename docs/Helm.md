@@ -18,10 +18,10 @@ helm version
 
 ## Step 2: Package the Helm Charts
 
-> **Note**: Modify the [values.yaml](../helm/mern-charts/values.yaml) file as per your setup.
+> **Note**: Modify the [values.yaml](../helm-chart/values.yaml) file as per your setup.
 
 ```bash
-helm package mern-charts
+helm package helm-chart
 ```
 
 This will create `.tgz` files for each chart in the current directory.
@@ -33,7 +33,7 @@ This will create `.tgz` files for each chart in the current directory.
 Install each chart using Helm:
 
 ```bash
-helm install mern-charts ./mern-charts
+helm install helm-chart ./helm-chart
 ```
 
 ### Verify
@@ -87,10 +87,10 @@ Verify the Ingress controller is running:
 kubectl get pods --namespace ingress-nginx
 ```
 
-To configure Ingress, edit the [values.yaml](../helm/mern-charts/values.yaml) file 
-![values.png](../assets/values.png)
+To configure Ingress, edit the [values.yaml](../helm-chart/values.yaml) file 
+![values.png](./assets/values.png)
 
-Include the following ingress configuration in `helm/mern-charts/templates/ingress.yaml`:
+Include the following ingress configuration in `helm-chart/templates/ingress.yaml`:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -122,8 +122,8 @@ spec:
 Repackage and reinstall the chart:
 
 ```bash
-helm package mern-charts
-helm install mern-charts ./mern-charts
+helm package helm-chart
+helm install helm-chart ./helm-chart
 ```
 
 Access the application at:
@@ -141,7 +141,7 @@ If you need to uninstall the deployed Helm charts, use the following commands:
 ### Uninstall Chart
 
 ```bash
-helm uninstall mern-charts
+helm uninstall helm-chart
 ```
 
 After uninstalling the charts, you can also check the status to confirm that the resources have been removed:

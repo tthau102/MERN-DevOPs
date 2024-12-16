@@ -80,7 +80,7 @@ Configure the nodePort `30001`
 kubectl patch edit argocd-server -n argocd 
 ```
 
-![argocd](../assets/argocd.png)
+![argocd](./assets/argocd.png)
 
 ### **8 Confirm Service Type Change**
 ```bash
@@ -127,7 +127,7 @@ After logging in, go to **User Info** and change the default password for enhanc
    - **Sync Policy:** Choose `Manual` or `Automatic` based on your need.
    - Select `Auto-Create Namespace`
 
-   ![argocd-1](../assets/argocd-1.png)
+   ![argocd-1](./assets/argocd-1.png)
 
 ---
 
@@ -141,7 +141,7 @@ After logging in, go to **User Info** and change the default password for enhanc
 - **Path to Manifests:**  
   `/kubernetes` 
 
-  ![argocd-2](../assets/argocd-2.png)
+  ![argocd-2](./assets/argocd-2.png)
 
 ---
 
@@ -149,7 +149,7 @@ After logging in, go to **User Info** and change the default password for enhanc
 - **Cluster:** Select the default cluster if you are deploying to the same cluster.  
 - **Namespace:** Specify a target namespace for your app: `mern-devops`
 
-   ![argocd-3](../assets/argocd-3.png)
+   ![argocd-3](./assets/argocd-3.png)
 
 ---
 
@@ -157,7 +157,7 @@ After logging in, go to **User Info** and change the default password for enhanc
 1. Click **Create** to save the configuration.
 2. Open the application in the ArgoCD dashboard.
 
-   ![argocd-4](../assets/argocd-4.png)
-   ![argocd-5](../assets/argocd-5.png)
+   ![argocd-4](./assets/argocd-4.png)
+   ![argocd-5](./assets/argocd-5.png)
 
 ---
