@@ -16,79 +16,27 @@ helm version
 
 ---
 
-## Step 2: Clone the Repository
+## Step 2: Package the Helm Charts
 
-Clone the GitHub repository:
-
-```bash
-git clone https://github.com/atkaridarshan04/MERN-DevOps.git
-```
-
-Change into the Helm charts directory:
+> **Note**: Modify the [values.yaml](../helm/mern-charts/values.yaml) file as per your setup.
 
 ```bash
-cd MERN-DevOps/helm
-```
-
----
-
-## Step 3: Customize `values.yaml` Files
-
-Modify the environment variables in the `values.yaml` files for the **backend** and **frontend** charts to ensure they point to the correct services for your deployment.
-
-### Backend `backend-chart/values.yaml`
-```yaml
-env:
-  port: "8000" # Update this if your backend runs on a different port
-  mongodb_url: "mongodb://mongodb-chart:27017/db" # Ensure this matches your MongoDB service name
-```
-
-### Frontend `frontend-chart/values.yaml`
-```yaml
-env:
-  vite_api_backend_url: "http://192.168.49.2:31100" # Replace with your EC2 instance IP and port
-```
-
-**Note:** The example values provided here are specific to this deployment. Make sure to modify these values according to your environment and service configurations.
-
----
-
-## Step 4: Package the Helm Charts
-
-Package all the charts into `.tgz` files. Run the following command from the helm directory:
-
-```bash
-helm package backend-chart
-helm package frontend-chart
-helm package mongodb-chart
+helm package mern-charts
 ```
 
 This will create `.tgz` files for each chart in the current directory.
 
 ---
 
-## Step 5: Install the Helm Charts
+## Step 3: Install the Helm Charts
 
-Install each chart using Helm.
+Install each chart using Helm:
 
-### Install MongoDB Chart
 ```bash
-helm install mongodb-chart ./mongodb-chart
+helm install mern-charts ./mern-charts
 ```
 
-### Install Backend Chart
-```bash
-helm install backend-chart ./backend-chart
-```
-
-### Install Frontend Chart
-```bash
-helm install frontend-chart ./frontend-chart
-```
-
----
-
-## Step 6: Verify the Installation
+### Verify
 
 List all Helm releases to confirm they are deployed:
 
@@ -102,45 +50,104 @@ Check the status of all resources in the Kubernetes cluster:
 kubectl get all -n mern-devops
 ```
 
-You should see the running pods, services, and deployments associated with your MongoDB, backend, and frontend charts.
+---
+
+## Step 4: Access the Application
+
+```bash
+kubectl get svc -n mern-devops
+```
+
+```
+http://<node-ip>:31000
+```
 
 ---
 
-## Step 7: Access the Application
+## Step 5: Configure Ingress
 
-Make sure the frontend service is exposed via **NodePort**. Use the following address to access the application:
+Deploy the Ingress controller:
+
+```bash
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+```
+
+Wait for the Ingress controller pods to become ready:
+
+```bash
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+```
+
+Verify the Ingress controller is running:
+
+```bash
+kubectl get pods --namespace ingress-nginx
+```
+
+To configure Ingress, edit the [values.yaml](../helm/mern-charts/values.yaml) file 
+![values.png](../assets/values.png)
+
+Include the following ingress configuration in `helm/mern-charts/templates/ingress.yaml`:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-frontend-service
+                port:
+                  number: {{ .Values.frontend.containerPort }}
+          - path: /books
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-backend-service
+                port:
+                  number: {{ .Values.backend.containerPort }}
+```
+
+Repackage and reinstall the chart:
+
+```bash
+helm package mern-charts
+helm install mern-charts ./mern-charts
+```
+
+Access the application at:
 
 ```
-http://<ec2-workerNode-ip>:31000
+http://<node-ip>
 ```
-
-Replace `<ec2-workerNode-ip>` with the public IP address of your EC2 worker node.
 
 ---
 
-## Step 8: Cleanup
+## Step 6: Cleanup
 
 If you need to uninstall the deployed Helm charts, use the following commands:
 
-### Uninstall MongoDB Chart
-```bash
-helm uninstall mongodb-chart
-```
+### Uninstall Chart
 
-### Uninstall Backend Chart
 ```bash
-helm uninstall backend-chart
-```
-
-### Uninstall Frontend Chart
-```bash
-helm uninstall frontend-chart
+helm uninstall mern-charts
 ```
 
 After uninstalling the charts, you can also check the status to confirm that the resources have been removed:
 
 ```bash
-kubectl get all
+kubectl get ns
 ```
 
 List all Helm releases to confirm they are uninstalled:
@@ -150,3 +157,4 @@ helm ls
 ```
 
 ---
+
