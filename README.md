@@ -1,6 +1,6 @@
 # **MERN DevOps Project**
 
-This project is designed to facilitate the deployment of a MERN (MongoDB, Express, React, Node.js) application. By leveraging modern technologies such as **Docker** for containerization, **Kubernetes** for orchestration, **Jenkins** for continuous integration and delivery (CI/CD), and **ArgoCD** for GitOps-based continuous deployment, this project aims to streamline the entire software development lifecycle.
+This project is designed to facilitate the deployment of a MERN (MongoDB, Express, React, Node.js) application. By using technologies such as **Docker** for containerization, **Kubernetes** for orchestration, **Jenkins** for continuous integration and delivery (CI/CD), and **ArgoCD** for GitOps-based continuous deployment.
 
 ---
 
@@ -8,11 +8,11 @@ This project is designed to facilitate the deployment of a MERN (MongoDB, Expres
 
 The MERN DevOps project includes:
 
-- **Dockerization**: Building and running containers for the frontend, backend, and MongoDB using Docker.
-- **Kubernetes Deployment**: Deploying the application on a Kubernetes cluster using `kubectl` and YAML configurations.
-- **CI/CD Pipeline**: Automating the build, test, and deployment processes using Jenkins.
+- **Dockerization**: Building and running containers for the frontend, backend, and MongoDB using Docker and docker compose.
+- **Kubernetes Deployment**: Deploying the application on a kind Kubernetes cluster and configuring an ingress controller.
+- **CI/CD Pipeline**: Automating multiple SDLC stages using Jenkins.
 - **Helm Deployment**: Managing Kubernetes deployments using Helm charts for MongoDB, backend, and frontend services.
-- **ArgoCD GitOps**: Continuously deploying and synchronizing the application with the GitHub repository to ensure that the live environment reflects the latest code changes.
+- **ArgoCD GitOps**: Continuously deploying and synchronizing the application with the GitHub repository.
 - **Observability**: Implementing monitoring mechanisms using tools like Prometheus and Grafana to monitor the health and performance of the application.
 ---
 
