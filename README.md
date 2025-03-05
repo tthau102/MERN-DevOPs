@@ -1,28 +1,36 @@
-# **MERN DevOps Project**
+# MERN DevOps Project
 
-This project is designed to facilitate the deployment of a MERN (MongoDB, Express, React, Node.js) application. By using technologies such as **Docker** for containerization, **Kubernetes** for orchestration, **Jenkins** for continuous integration and delivery (CI/CD), and **ArgoCD** for GitOps-based continuous deployment.
+This project is designed to facilitate the deployment of a MERN (MongoDB, Express, React, Node.js) application by integrating key DevOps tools and best practices. It leverages Docker for containerization, Kubernetes for orchestration, Jenkins for CI/CD automation, Helm for package management, ArgoCD for GitOps-based deployment, Kustomize for environment-specific configurations, and Prometheus/Grafana for monitoring and observability.
 
 ---
 
-## **Overview**
+## Overview
 
 The MERN DevOps project includes:
 
-- **Dockerization**: Building and running containers for the frontend, backend, and MongoDB using Docker and docker compose.
+- **Dockerization**: Building and running containers for the frontend, backend, and MongoDB using Docker and Docker Compose.
+
 - **Kubernetes Deployment**: Deploying the application on a kind Kubernetes cluster and configuring an ingress controller.
+
 - **CI/CD Pipeline**: Automating multiple SDLC stages using Jenkins.
+
 - **Helm Deployment**: Managing Kubernetes deployments using Helm charts for MongoDB, backend, and frontend services.
+
 - **ArgoCD GitOps**: Continuously deploying and synchronizing the application with the GitHub repository.
+
+- **Kustomize**: Managing Kubernetes configurations for different environments without modifying base YAML files.
+
 - **Observability**: Implementing monitoring mechanisms using tools like Prometheus and Grafana to monitor the health and performance of the application.
+
 ---
 
-## **Project Deployment Flow**
+## Project Deployment Flow
 
 ![workflow-gif](./docs/assets/workflow.gif)
 
 ---
 
-## **Documentation**
+## Documentation
 
 To understand the various components of this project, refer to the following documentation:
 
@@ -39,9 +47,13 @@ To understand the various components of this project, refer to the following doc
   Instructions on how to deploy the MERN stack application using Helm, including installation, chart customization, and deployment of MongoDB, backend, and frontend services.
 
 - **[ArgoCD.md](./docs/ArgoCD.md)**:  
-  A step-by-step guide on installing, configuring, and using ArgoCD to deploy the application by Connecting ArgoCD to the GitHub repository.
+  A step-by-step guide on installing, configuring, and using ArgoCD to deploy the application by connecting ArgoCD to the GitHub repository.
 
-- **[Observability.md](./docs/Observability.md)**:   
-Instructions on setting up Prometheus for monitoring application metrics. Visualizing data with Grafana dashboards.
+- **[Kustomize.md](./docs/Kustomize.md)**:  
+  Steps on how to manage multiple environments (Dev, Prod) using Kustomize for Kubernetes configurations.
+
+- **[Observability.md](./docs/Observability.md)**:  
+  Instructions on setting up Prometheus for monitoring application metrics and visualizing data with Grafana dashboards.
 
 ---
+
