@@ -16,16 +16,16 @@ resources:
 
 
 configMapGenerator:
-  - name: backend-config
-    literals:
-      - PORT=8000
-      - mongoDBURL=mongodb://admin:password123@mongodb-service:27017/db?authSource=admin
-
   - name: frontend-config
     literals:
-      - VITE_API_BACKEND_URL=http://192.168.88.133:31100 # using nodeport service
-      # VITE_API_BACKEND_URL=http://192.168.88.133  # after configuring ingress 
-      # VITE_API_BACKEND_URL=http://deployzone.duckdns.org # after configuring donain for ingress-ip 
+      # - VITE_API_BACKEND_URL=http://192.168.88.133:31100 # using nodeport service
+      - VITE_API_BACKEND_URL=http://192.168.88.133  # after configuring ingress 
+      # - VITE_API_BACKEND_URL=http://deployzone.duckdns.org # after configuring donain for ingress-ip 
+
+  # - name: backend-config
+  #   literals:
+  #     - PORT=8000
+  #     - mongoDBURL=mongodb://admin:password123@mongodb-service:27017/db?authSource=admin
 
 
 secretGenerator:

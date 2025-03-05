@@ -1,68 +1,64 @@
 # Managing Kubernetes Deployments with Kustomize
 
-## Why Use Kustomize?
-Kustomize simplifies Kubernetes configurations by allowing environment-specific customizations without modifying the base YAML files. It solves the problem of managing multiple environments (e.g., Dev, Prod) by providing a structured way to apply changes dynamically.
+## Overview
+Kustomize simplifies Kubernetes configurations by allowing environment-specific customizations without modifying the base YAML files. It provides a structured approach to managing multiple environments, such as Development and Production, by dynamically applying changes.
 
 ## Environment Stages
-We have two environments configured:
+We have configured the following environments:
 
 - **Development (`overlays/dev`)**
 - **Production (`overlays/prod`)**
 
-### Changes in Each Environment
-Each environment applies patches to modify the following:
+### Key Differences Between Environments
+Each environment applies specific patches to modify:
 
-1. **Replica count**
-   - Dev: `replicas: 1`
-   - Prod: `replicas: 2`
+1. **Replica Count**
+   - Development: `replicas: 1`
+   - Production: `replicas: 2`
 
-2. **Container image versions**
-   - Different images for Dev and Prod.
+2. **Container Image Versions**
+   - Different images are used for each environment.
 
-## ConfigMap & Secret Management
-We use **configMapGenerator** and **secretGenerator** in Kustomize instead of separate YAML files.
+## Configuration Management
+Instead of separate YAML files, we use `configMapGenerator` and `secretGenerator` in Kustomize to manage ConfigMaps and Secrets. Ensure these configurations are correctly set up in the [/base/kustomization.yml](../kustomize/base/kustomization.yml)
 
-![Kustomize Config](./assets/kustomize-config.png)
+![kustomize-config](./assets/kustomize-config.png)
 
-Ensure these configurations are properly set up before deployment in [`/base/kustomization.yml`](../kustomize/base/kustomization.yml).
+## Deployment Process
 
----
-
-## Deploying Using Kustomize
-
-### Setting Up the Namespace
-Before deploying, create the `mern-devops` namespace and switch the context to it:
+### 1. Set Up the Namespace
+Before deploying, create the required namespace and set the context:
 
 ```bash
 kubectl create namespace mern-devops
 kubectl config set-context --current --namespace=mern-devops
 ```
 
-### Verify Configuration Before Deployment
+### 2. Verify Configuration
+Before applying the deployment, verify the configurations:
+
 ```bash
-kubectl kustomize overlays/dev  # Check Dev environment
-kubectl kustomize overlays/prod  # Check Prod environment
+kubectl kustomize overlays/dev   # Verify Development environment
+kubectl kustomize overlays/prod  # Verify Production environment
 ```
 
-### Deploy the Application
+### 3. Deploy the Application
 
-#### Deploy Dev Environment
+#### Deploy to Development Environment
 ```bash
 kubectl apply -k overlays/dev
 ```
 
-#### Deploy Prod Environment
+#### Deploy to Production Environment
 ```bash
 kubectl apply -k overlays/prod
 ```
 
-**Note:** If applying both in the same cluster, change the node ports for frontend and backend deployments.
+**Note:** If deploying both environments within the same cluster, ensure that node ports for frontend and backend deployments do not conflict.
 
----
+## Post-Deployment Verification
 
-## Verifying Deployment
-
-### Check Configurations Applied to Backend
+### Check Applied Configurations
 ```bash
 kubectl get configmap backend-config -o yaml -n mern-devops
 ```
@@ -72,15 +68,13 @@ kubectl get configmap backend-config -o yaml -n mern-devops
 kubectl get pods -n mern-devops
 ```
 
-### Check Service Endpoints
+### Verify Service Endpoints
 ```bash
 kubectl get svc -n mern-devops
 ```
 
----
-
-## Accessing the Application
-Once deployed, access the frontend at:
+### Access the Application
+Once deployed, access the frontend using:
 
 ```bash
 http://<NODE_IP>:31000
@@ -92,47 +86,72 @@ To find the **Node IP**, run:
 kubectl get nodes -o wide
 ```
 
----
+## Configuring Ingress (Optional)
 
-## Deleting Everything
-To delete all resources:
+### 1. Install Nginx Ingress Controller
+Deploy the Ingress controller:
 
 ```bash
-kubectl delete -k overlays/dev  # For Dev
-kubectl delete -k overlays/prod  # For Prod
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
 ```
 
-Or delete everything in the namespace:
+Verify the Ingress controller is running:
+
+```bash
+kubectl get pods --namespace ingress-nginx
+```
+
+### 2. Update Ingress Configuration
+Ensure the necessary configurations are updated in the following files:
+
+- [base/kustomization.yml](../kustomize/base/kustomization.yml)
+   ![kustomize-config-1](./assets/kustomize-config-1.png)
+
+- [overlays/dev/kustomization.yml](../kustomize/overlays/dev/kustomization.yml)
+- [overlays/prod/kustomization.yml](../kustomize/overlays/prod/kustomization.yml)
+   ![kustomize-3](./assets/kustomize-3.png)
+
+
+### 3. Access the Application via Ingress
+Once deployed, the application can be accessed at:
+
+```bash
+http://<NODE_IP>/
+```
+
+## Deleting Resources
+To remove all resources for a specific environment:
+
+```bash
+kubectl delete -k overlays/dev   # Delete Development environment
+kubectl delete -k overlays/prod  # Delete Production environment
+```
+
+Alternatively, delete the entire namespace:
 
 ```bash
 kubectl delete namespace mern-devops
 ```
 
----
-
 ## Additional Useful Commands
 
-### Check Logs for Backend & Frontend
+### View Logs
 ```bash
 kubectl logs -l app=backend -n mern-devops
 kubectl logs -l app=frontend -n mern-devops
 ```
 
-### Restart Backend & Frontend
+### Restart Deployments
 ```bash
-kubectl rollout restart deployment backend-deployment -n mern-devops
-kubectl rollout restart deployment frontend-deployment -n mern-devops
+kubectl rollout restart deployment dev-backend-deployment -n mern-devops
+kubectl rollout restart deployment dev-frontend-deployment -n mern-devops
 ```
 
----
-
 ## Conclusion
-- Kustomize helps manage multiple environments efficiently.
-- Uses patches for environment-specific changes.
-- ConfigMaps & Secrets are handled via Kustomize.
-- Ensure the `mern-devops` namespace exists before deployment.
-- Easily apply, verify, and access your application.
-
-Now you're set to deploy your MERN stack using Kustomize!
+- **Kustomize provides an efficient way to manage multiple Kubernetes environments.**
+- **Environment-specific patches ensure flexibility without modifying base YAML files.**
+- **ConfigMaps and Secrets are dynamically generated through Kustomize.**
+- **Namespace must be created before deployment.**
+- **Easily deploy, verify, and access your MERN application using Kustomize.**
 
 ---
