@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      tags: 
+        - bookstore-frontend
+        # - bookstore-frontend:v3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      tags:
+        - bookstore-backend
+        # - bookstore-backend:v3
+
+# For now its a simple bake configuration file

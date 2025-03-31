@@ -3,18 +3,19 @@ version: "3.8"
 services:
   frontend:
     container_name: frontend
-    build: ./frontend
+    # build: ./frontend
+    image: bookstore-frontend
     ports:
       - "5173:5173"
     env_file:
       - ./frontend/.env.docker
     networks:
       - docker-network
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-          cpus: "0.25"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 128M
+    #       cpus: "0.25"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173"]
       interval: 15s
@@ -23,29 +24,31 @@ services:
       start_period: 30s
     restart: on-failure
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+      # backend:
+      #   condition: service_healthy
 
   backend:
     container_name: backend
-    build: ./backend
+    # build: ./backend
+    image: bookstore-backend  
     ports:
       - "8000:8000"
     env_file:
       - ./backend/.env.docker
     networks:
       - docker-network
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-          cpus: "0.25"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/books"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 128M
+    #       cpus: "0.25"
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/books"]
+    #   interval: 15s
+    #   timeout: 10s
+    #   retries: 5
+    #   start_period: 30s
     restart: on-failure
     depends_on:
       mongodb:
@@ -58,11 +61,11 @@ services:
       - "27017:27017"
     networks:
       - docker-network
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: "0.5"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256M
+    #       cpus: "0.5"
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 10s
