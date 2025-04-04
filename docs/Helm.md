@@ -16,9 +16,49 @@ helm version
 
 ---
 
-## Step 2: Package the Helm Charts
+## Step 2: Cluster Setup
+
+Cluster Configuration: `kind-config.yaml`
+```yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 80   # for nginx ingress
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443  # for HTTPS ingress
+        hostPort: 443
+        protocol: TCP
+      - containerPort: 31000 # for frontend container
+        hostPort: 31000
+        protocol: TCP
+      - containerPort: 31100 # for backend container
+        hostPort: 31100
+        protocol: TCP
+```
+
+- Run the following command to create a Kubernetes cluster using the provided `kind-config.yaml`:
+
+  ```bash
+  kind create cluster --config kind-config.yaml
+  ```
+
+- Create **mern-devops** namespace:
+
+  ```bash
+  kubectl create namespace mern-devops
+  ```
+
+
+---
+
+## Step 3: Package the Helm Charts
 
 > **Note**: Modify the [values.yaml](../helm-chart/values.yaml) file as per your setup.
+![values-2](./assets/values-2.png)
+update with your specific `node ip`
 
 ```bash
 helm package helm-chart
@@ -28,13 +68,14 @@ This will create `.tgz` files for each chart in the current directory.
 
 ---
 
-## Step 3: Install the Helm Charts
+## Step 4: Install the Helm Charts
 
 Install each chart using Helm:
 
 ```bash
 helm install helm-chart ./helm-chart
 ```
+![helm-install](./assets/helm-install.png)
 
 ### Verify
 
@@ -43,16 +84,18 @@ List all Helm releases to confirm they are deployed:
 ```bash
 helm ls
 ```
+![helm-install](./assets/helm-ls.png)
 
 Check the status of all resources in the Kubernetes cluster:
 
 ```bash
 kubectl get all -n mern-devops
 ```
+![helm-get-all](./assets/helm-get-all.png)
 
 ---
 
-## Step 4: Access the Application
+## Step 5: Access the Application
 
 ```bash
 kubectl get svc -n mern-devops
@@ -64,7 +107,7 @@ http://<node-ip>:31000
 
 ---
 
-## Step 5: Configure Ingress
+## Step 6: Configure Ingress
 
 Deploy the Ingress controller:
 
@@ -131,10 +174,11 @@ Access the application at:
 ```
 http://<node-ip>
 ```
+![helm-dns](./assets/helm-dns.png)
 
 ---
 
-## Step 6: Cleanup
+## Step 7: Cleanup
 
 If you need to uninstall the deployed Helm charts, use the following commands:
 
