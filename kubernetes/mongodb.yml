@@ -6,12 +6,13 @@ metadata:
   labels:
     app: mongodb
 spec:
+  # minAvailable: 2 
   replicas: 1
   selector:
     matchLabels:
       app: mongodb
   updateStrategy:
-    type: RollingUpdate   
+    type: RollingUpdate
     rollingUpdate:
       partition: 0
   template:
@@ -20,6 +21,10 @@ spec:
       labels:
         app: mongodb
     spec:
+      securityContext:       # Pod-level security context
+        runAsNonRoot: true
+        runAsUser: 999       # Mongo official container uses 999
+        fsGroup: 999         # Ensures volume write access
       containers:
         - name: mongodb
           image: mongo:4.4
@@ -38,16 +43,23 @@ spec:
                   key: password
             - name: MONGO_INITDB_DATABASE
               value: "db"
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "0.25"
-            limits:
-              memory: "256Mi"
-              cpu: "0.25"
+          # resources:
+          #   requests:
+          #     memory: "128Mi"
+          #     cpu: "0.25"
+          #   limits:
+          #     memory: "256Mi"
+          #     cpu: "0.25"
           volumeMounts:
             - name: mongodb-vol
-              mountPath: /data/db        
+              mountPath: /data/db
+          securityContext:  # Container-level security context
+            runAsNonRoot: true
+            runAsUser: 999       # Mongo official container uses 999
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL  # Drop all capabilities for security
       volumes:
         - name: mongodb-vol
           persistentVolumeClaim:
@@ -67,4 +79,3 @@ spec:
     - port: 27017
       targetPort: 27017
       protocol: TCP
-

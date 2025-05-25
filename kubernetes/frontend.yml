@@ -6,6 +6,7 @@ metadata:
   labels:
     app: frontend
 spec:
+  # maxUnavailable: 1
   replicas: 1
   selector:
     matchLabels:
@@ -35,7 +36,14 @@ spec:
               path: /
               port: 5173
             initialDelaySeconds: 30
-            periodSeconds: 15        
+            periodSeconds: 15  
+          # resources:
+          #   requests:
+          #     memory: "128Mi"
+          #     cpu: "0.25"
+          #   limits:
+          #     memory: "256Mi"
+          #     cpu: "0.25"    
   strategy:
     type: RollingUpdate
     rollingUpdate:
