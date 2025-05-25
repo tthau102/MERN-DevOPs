@@ -111,7 +111,17 @@ To push the built images to Docker Hub, follow these steps:
 Go and have a look to your Docker Hub
 
 ![docker-hub](./assets/docker-hub.png)
----
+
+
+## 🐳 Docker Best Practices Applied
+Added with Docker best practices for production-grade containers:
+
+- **Non-root user**: Containers run as non-root users for improved security.
+- **Multistage builds**: Separate build and runtime stages to reduce image size.
+- Optimized builds for **smaller image sizes**, fewer vulnerabilities
+![docker-prod-image-size](./assets/docker-prod-image-size.png)
+- **Production-ready Dockerfiles**:
+   - Dockerfile.prod added in both frontend/ and backend/ folders
 
 ### Happy Dockerizing! 🚀
 

@@ -22,7 +22,7 @@ app.use(cors());
 
 app.get("/", (request, response) => {
   console.log(request);
-  return response.status(234).send("Welcome to MERN Stack Book Shop");
+  return response.status(200).send("Welcome to MERN Stack Book Shop");
 });
 
 app.use("/books", booksRoute);
@@ -31,8 +31,8 @@ mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log("App connected to db");
-    app.listen(PORT, () => {
-      console.log(`App listening on port ${PORT}!`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
