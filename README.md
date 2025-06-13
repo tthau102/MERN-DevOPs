@@ -1,2 +1,1 @@
-# MERN-DevOps
-# MERN-DevOps
+# MERN-DevOPs
