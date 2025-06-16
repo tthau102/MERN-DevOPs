@@ -10,7 +10,7 @@
 
 ## Architecture
 ```
-GitHub → Jenkins → Docker Build → ArgoCD → EKS
+![workflow-gif](./docs/assets/workflow.gif)
 ```
 
 ## Features
