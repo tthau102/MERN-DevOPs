@@ -9,9 +9,8 @@
 - **Container:** Docker + Kubernetes + Helm
 
 ## Architecture
-```
 ![workflow-gif](./docs/assets/workflow.gif)
-```
+
 
 ## Features
 - Automated CI/CD pipeline
