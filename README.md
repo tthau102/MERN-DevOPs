@@ -1,59 +1,73 @@
 # MERN DevOps Project
 
-This project is designed to facilitate the deployment of a MERN (MongoDB, Express, React, Node.js) application by integrating key DevOps tools and best practices. It leverages Docker for containerization, Kubernetes for orchestration, Jenkins for CI/CD automation, Helm for package management, ArgoCD for GitOps-based deployment, Kustomize for environment-specific configurations, and Prometheus/Grafana for monitoring and observability.
+Ứng dụng bookstore MERN với CI/CD pipeline hoàn chỉnh.
 
----
+## Tech Stack
+- **App:** React + Node.js + MongoDB
+- **Infrastructure:** AWS EKS + Terraform  
+- **CI/CD:** Jenkins + ArgoCD
+- **Container:** Docker + Kubernetes + Helm
 
-## Overview
+## Architecture
+```
+GitHub → Jenkins → Docker Build → ArgoCD → EKS
+```
 
-The MERN DevOps project includes:
+## Features
+- Automated CI/CD pipeline
+- Security scanning (Trivy, OWASP, SonarQube)
+- GitOps deployment với ArgoCD
+- Infrastructure as Code với Terraform
+- Kubernetes orchestration
 
-- **Dockerization**: Building and running containers for the frontend, backend, and MongoDB using Docker and Docker Compose.
+## Quick Start
 
-- **Kubernetes Deployment**: Deploying the application on a kind Kubernetes cluster and configuring an ingress controller.
+### 1. Deploy Infrastructure
+```bash
+cd terraform/
+terraform init && terraform apply
+```
 
-- **CI/CD Pipeline**: Automating multiple SDLC stages using Jenkins.
+### 2. Setup Jenkins
+- Install Docker, SonarQube, OWASP plugins
+- Configure DockerHub credentials
+- Create pipeline từ Jenkinsfile
 
-- **Helm Deployment**: Managing Kubernetes deployments using Helm charts for MongoDB, backend, and frontend services.
+### 3. Deploy Application
+```bash
+# Using Helm
+helm install bookstore ./helm-chart
 
-- **ArgoCD GitOps**: Continuously deploying and synchronizing the application with the GitHub repository.
+# Using Kubectl
+kubectl apply -k kubernetes/
+```
 
-- **Kustomize**: Managing Kubernetes configurations for different environments without modifying base YAML files.
+## Project Structure
+```
+├── src/                 # MERN source code
+├── kubernetes/          # K8s manifests
+├── helm-chart/         # Helm templates  
+├── terraform/          # Infrastructure code
+├── Jenkinsfile         # CI pipeline
+└── gitops/Jenkinsfile  # CD pipeline
+```
 
-- **Observability**: Implementing monitoring mechanisms using tools like Prometheus and Grafana to monitor the health and performance of the application.
+## Monitoring
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000/books`
+- Logs: `kubectl logs -f deployment/backend-deployment`
 
----
+## CI/CD Pipeline
 
-## Project Deployment Flow
+**Jenkins CI:**
+1. Security scan (Trivy)
+2. Dependency check (OWASP)  
+3. Code quality (SonarQube)
+4. Docker build & push
 
-![workflow-gif](./docs/assets/workflow.gif)
+**ArgoCD CD:**
+1. Monitor git changes
+2. Auto-sync K8s manifests
+3. Deploy to EKS
 
----
-
-## Documentation
-
-To understand the various components of this project, refer to the following documentation:
-
-- **[Docker.md](./docs/Docker.md)**:  
-  Detailed instructions on how to build and run the MERN stack application using Docker, including creating a Docker network, building images, and managing containers.
-
-- **[Kubernetes.md](./docs/Kubernetes.md)**:  
-  Detailed instructions on deploying the MERN stack application using Kubernetes, including how to set up persistent storage, deploy services, and access the application.
-
-- **[Jenkins.md](./docs/Jenkins.md)**:  
-  A comprehensive guide on the Jenkins CI/CD pipeline, outlining the various stages, parameters, prerequisites, and tools used to automate the integration and deployment processes.
-
-- **[Helm.md](./docs/Helm.md)**:  
-  Instructions on how to deploy the MERN stack application using Helm, including installation, chart customization, and deployment of MongoDB, backend, and frontend services.
-
-- **[ArgoCD.md](./docs/ArgoCD.md)**:  
-  A step-by-step guide on installing, configuring, and using ArgoCD to deploy the application by connecting ArgoCD to the GitHub repository.
-
-- **[Kustomize.md](./docs/Kustomize.md)**:  
-  Steps on how to manage multiple environments (Dev, Prod) using Kustomize for Kubernetes configurations.
-
-- **[Observability.md](./docs/Observability.md)**:  
-  Instructions on setting up Prometheus for monitoring application metrics and visualizing data with Grafana dashboards.
-
----
-
+Contact: trunghautran0102@gmail.com
