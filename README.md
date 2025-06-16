@@ -68,5 +68,3 @@ kubectl apply -k kubernetes/
 1. Monitor git changes
 2. Auto-sync K8s manifests
 3. Deploy to EKS
-
-Contact: trunghautran0102@gmail.com
